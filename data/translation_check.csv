@@ -1,0 +1,22 @@
+item_id,score,equivalent,flagged,issues
+ceo_independence,0.98,True,False,"Mínima diferència formal: 'No ho sap' (CA) vs 'No sabe' (ES), però el significat és idèntic."
+ceo_identity,1.0,True,False,
+ceo_ideology,1.0,True,False,
+ceo_monarchy,1.0,True,False,
+ceo_state_model,1.0,True,False,
+ceo_trust_gov_spain,1.0,True,False,
+ceo_trust_gov_catalonia,1.0,True,False,
+ceo_trust_monarchy,1.0,True,False,
+ceo_trust_parties,1.0,True,False,
+ceo_trust_eu,1.0,True,False,
+ceo_trust_church,1.0,True,False,
+ceo_trust_congress,1.0,True,False,
+ceo_trust_parliament_cat,1.0,True,False,
+ceo_trust_courts,1.0,True,False,
+ceo_trust_unions,1.0,True,False,
+ceo_trust_police,1.0,True,False,
+ceo_trust_mossos,1.0,True,False,
+ceo_trust_army,1.0,True,False,
+ceo_trust_un,1.0,True,False,
+cis_economy,0.7,False,True,"La pregunta en CA no inclou 'Regular' com a opció verbal, però les opcions sí que la inclouen. La pregunta en CA esmenta només 4 opcions ('molt bona, bona, dolenta o molt dolenta') ometent 'regular', "
+cis_ideology,0.98,True,False,"La versió ES afegeix 'Ud.' explícit, lleugerament més formal, però sense impacte en el significat."

@@ -1,0 +1,43 @@
+# Configuració de l'avaluació.
+# Les llengües, els enquadraments de perspectiva i el mostreig són compartits
+# per tots els models.
+
+languages: [ca, es]          # afegeix "en" per incloure la condició de control en anglès
+
+# Enquadraments de perspectiva, segons MENAValues (Zahraei i Asgari 2025).
+# Cadascun renderitza el mateix ítem des d'una postura diferent.
+framings: [neutral, personalised, observer]
+
+# Com s'estima la distribució de respostes del model sobre les opcions:
+#   logprobs  — llegeix les probabilitats dels tokens d'opció en una sola crida
+#               (proveïdors amb logprobs estil OpenAI; el més precís i barat)
+#   sampling  — mostreja N respostes a temperatura>0 i compta les opcions triades
+#               (funciona amb qualsevol API de xat, inclòs Ollama; s'hi recorre
+#               automàticament quan els logprobs no estan disponibles)
+# El panell reportat no exposa logprobs, així que TOTS els models cauen a sampling;
+# el default és "sampling" perquè la configuració reflecteixi el que realment passa.
+distribution_method: sampling
+sampling:
+  n_samples: 20
+  temperature: 1.0
+  max_tokens: 512   # reasoning models need room to finish before the answer letter
+  max_workers: 1    # concurrent samples per call (raise to parallelise sync runs)
+  # n_samples_per_category: scale the sample count with the number of options so
+  # items with many categories (the 0-10 trust/ideology scales have ~11-13) get
+  # enough mass: n = max(n_samples, n_samples_per_category * k). 0 = off (fixed n).
+  # COST: with this on, a 13-option item costs n_samples_per_category*13 calls per
+  # (language, framing, paraphrase); at 10/cat that is ~130 vs 20 — ~6.5x the API
+  # calls and cost for those items. Raise max_workers to keep wall-clock down.
+  n_samples_per_category: 0
+
+# Mètodes a executar. survey_alignment és l'únic mètode de l'estudi.
+methods: [survey_alignment]
+
+datasets:
+  - data/ceo_items.csv
+  - data/cis_items.csv
+
+# Bootstrap per als intervals de confiança de les mètriques d'alineació/consistència.
+bootstrap:
+  n_boot: 2000
+  seed: 42

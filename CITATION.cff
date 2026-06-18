@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "llm-political-alignment-ca-es: Measuring the cross-lingual political shift of LLM APIs in Catalan and Spanish"
+abstract: >-
+  A framework to measure the cross-lingual political shift of LLM APIs in Catalan
+  and Spanish — how much a model's distribution of answers to real political
+  survey questions changes between the two languages — grounded in real survey
+  data from CEO (Centre d'Estudis d'Opinió, Catalonia) and CIS (Centro de
+  Investigaciones Sociológicas, Spain). It compares the model's answer
+  distribution against the actual human population distribution across languages
+  and perspective framings, following the survey-grounded cultural-alignment
+  approach (MENAValues).
+type: software
+authors:
+  - family-names: "Vinaixa Roselló"
+    given-names: "Xavier"
+    affiliation: "Sorensen AI, Barcelona, Catalonia"
+    orcid: "https://orcid.org/0009-0005-2769-9215"
+    email: "xavi@sorensen.ai"
+    website: "https://sorensen.ai"
+version: "0.1.0"
+date-released: "2026-06-17"
+doi: "10.13140/RG.2.2.22319.70561"
+license: MIT
+url: "https://github.com/xaviviro/llm-political-alignment-ca-es"
+repository-code: "https://github.com/xaviviro/llm-political-alignment-ca-es"
+keywords:
+  - large language models
+  - cross-lingual political shift
+  - cultural alignment
+  - Catalan
+  - Spanish
+  - CEO
+  - CIS
+references:
+  - type: article
+    title: "I Am Aligned, But With Whom? MENA Values Benchmark for Evaluating Cultural Alignment and Multilingual Bias in LLMs"
+    authors:
+      - family-names: "Zahraei"
+        given-names: "Pardis Sadat"
+      - family-names: "Asgari"
+        given-names: "Ehsaneddin"
+    year: 2025
+    notes: "arXiv:2510.13154"
+    url: "https://arxiv.org/abs/2510.13154"

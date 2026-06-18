@@ -1,0 +1,61 @@
+# Models a avaluar. Cada `model` és un id de model de LiteLLM, així que funciona
+# qualsevol proveïdor que LiteLLM admeti: OpenAI, Anthropic, Google, Mistral,
+# DeepSeek, Groq, together i servidors locals via Ollama / endpoints compatibles
+# amb OpenAI.
+#
+# Les claus d'API es llegeixen de l'entorn (no les posis mai aquí): p. ex.
+#   OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY, MISTRAL_API_KEY...
+# Per a models locals, executa `ollama serve` i fes servir els ids `ollama/<nom>`.
+
+models:
+  # --- Groq (set GROQ_API_KEY; these models do not expose logprobs -> sampling) ---
+  - id: gpt-oss-120b
+    model: groq/openai/gpt-oss-120b
+    supports_logprobs: false
+  - id: gpt-oss-20b
+    model: groq/openai/gpt-oss-20b
+    supports_logprobs: false
+  - id: llama-4-scout-17b
+    model: groq/meta-llama/llama-4-scout-17b-16e-instruct
+    supports_logprobs: false
+  - id: llama-3.3-70b
+    model: groq/llama-3.3-70b-versatile
+    supports_logprobs: false
+
+  # --- Anthropic (set ANTHROPIC_API_KEY; no logprobs -> sampling) ---
+  - id: claude-sonnet-4-6
+    model: anthropic/claude-sonnet-4-6
+    supports_logprobs: false
+  - id: claude-opus-4-8
+    model: anthropic/claude-opus-4-8
+    supports_logprobs: false
+
+  # --- OpenAI (set OPENAI_API_KEY) ---
+  - id: gpt-5.4-mini
+    model: openai/gpt-5.4-mini-2026-03-17
+    supports_logprobs: false
+
+  # --- Google Gemini (set GEMINI_API_KEY) ---
+  - id: gemini-flash-lite
+    model: gemini/gemini-3.1-flash-lite
+    supports_logprobs: false
+  - id: gemini-flash
+    model: gemini/gemini-3.5-flash
+    supports_logprobs: false
+
+  # --- DeepSeek (set DEEPSEEK_API_KEY). NOTE: DeepSeek's API has no batch
+  #     endpoint, so run this one via scripts/model.py (sync), not run_batch.py. ---
+  - id: deepseek-v4-flash
+    model: deepseek/deepseek-v4-flash
+    supports_logprobs: false   # reasoning model: needs max_tokens >= 1024; no batch -> sync
+
+  # --- other hosted APIs (uncomment + set the matching API key) ---
+  # - id: gpt-4o
+  #   model: openai/gpt-4o
+  #   supports_logprobs: true
+
+  # --- local via Ollama (sense clau d'API; fes `ollama pull` abans) ---
+  # - id: salamandra-7b
+  #   model: ollama/salamandra
+  #   api_base: http://localhost:11434
+  #   supports_logprobs: false

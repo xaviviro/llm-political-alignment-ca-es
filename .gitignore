@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+uv.lock
+
+# Secrets — never commit API keys
+.env
+*.local
+
+# Regenerable artifacts
+site/
+*.html
+!templates/*.html
+evals/*.json
+.cache/
+batches/
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.log
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.out
+
+.DS_Store

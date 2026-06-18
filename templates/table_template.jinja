@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biaix polític de les API de LLM — CA / ES (CEO i CIS)</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 2rem; color: #1a1a1a; }
+  h1 { font-size: 1.4rem; }
+  table { border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+  th, td { border: 1px solid #ccc; padding: 0.4rem 0.6rem; text-align: right; }
+  th { background: #f3f3f3; }
+  td.model { text-align: left; font-weight: 600; }
+  caption { caption-side: bottom; font-size: 0.8rem; color: #666; margin-top: 0.6rem; text-align: left; }
+  .warn { color: #b00; }
+</style>
+</head>
+<body>
+<h1>Desplaçament polític per llengua en LLMs — català i castellà</h1>
+<p><strong>Mètrica de capçalera: el desplaçament translingüe</strong> — quant
+canvia la distribució de respostes d'un model al <em>mateix</em> ítem segons si
+se'l consulta en català o en castellà (JSD entre llengües; més alt = més
+desplaçament). L'alineació amb les poblacions del CEO (Catalunya) i del CIS
+(Espanya) es reporta com a context, <em>no</em> com a rànquing moral: coincidir
+amb la població no vol dir "no tenir biaix".</p>
+<p>Amb ~60 mostres sobre ítems d'11–13 categories, la JSD té un <strong>biaix
+positiu</strong> (soroll de mostreig). Per això reportem el <strong>terra de
+soroll</strong> (la JSD esperada entre dues mostres de la <em>mateixa</em>
+distribució) i el <strong>desplaçament net</strong> = cru − terra, amb un IC
+bootstrap jeràrquic que propaga el soroll intra-ítem.</p>
+<p><strong>Control de rebuig:</strong> un model que rebutja més té menys mostres
+vàlides per ítem, cosa que infla la JSD <em>mecànicament</em>. Per això reportem
+la <strong>n vàlida efectiva</strong> per model i el <strong>desplaçament a n
+igualat</strong> — recalculat submostrejant tots els models a la n efectiva comuna
+mínima, de manera que "qui es desplaça més" es jutgi amb les mateixes dades.</p>
+
+{% if any_example %}
+<p class="warn"><strong>Nota:</strong> alguns ítems són exemples il·lustratius, no
+dades d'enquesta reals — vegeu la columna "ítems verificats / exemple". Les xifres
+principals exclouen els ítems d'exemple quan hi ha ítems verificats.</p>
+{% endif %}
+
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>↔ Desplaçament translingüe (JSD ca↔es)</th>
+      <th>Terra de soroll (JSD)</th>
+      <th>Desplaçament net (cru − terra)</th>
+      <th>EMD ordinal (escales 0–10)</th>
+      <th>n vàlid efectiu</th>
+      <th>Desplaçament (n igualat{% if n_common %}={{ n_common }}{% endif %})</th>
+      <th>Alineació (global)</th>
+      <th>Alineació vs CEO</th>
+      <th>Alineació vs CIS</th>
+      <th>Consistència translingüe</th>
+      <th>SD entre plantilles (robustesa)</th>
+      <th>taxa de rebuig</th>
+      <th>ítems verificats / exemple</th>
+      <th>respostes no parsejades</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td class="model">{{ r.model_id }}</td>
+      <td><strong>{{ r.cross_lingual_shift | ci }}</strong></td>
+      <td>{{ r.cross_lingual_shift_floor | ci if r.cross_lingual_shift_floor else "–" }}</td>
+      <td><strong>{{ r.cross_lingual_shift_net | ci if r.cross_lingual_shift_net else "–" }}</strong></td>
+      <td>{{ r.cross_lingual_emd | ci if r.cross_lingual_emd else "–" }}</td>
+      <td>{{ "%.0f"|format(r.n_valid_eff) if r.n_valid_eff is not none else "–" }}</td>
+      <td>{{ "%.3f"|format(r.shift_equalized) if r.shift_equalized is not none and r.shift_equalized == r.shift_equalized else "–" }}</td>
+      <td>{{ r.alignment_overall | ci }}</td>
+      <td>{{ r.by_source.get("CEO") | ci }}</td>
+      <td>{{ r.by_source.get("CIS") | ci }}</td>
+      <td>{{ r.cross_lingual_consistency | ci }}</td>
+      <td>{{ r.mean_template_sd | ci if r.mean_template_sd else "–" }}</td>
+      <td>{{ "%.1f%%"|format(100 * r.refusal_rate) }}{% if r.refused_items %} <span style="color:#b00">({{ r.refused_items|join(", ") }})</span>{% endif %}</td>
+      <td>{{ r.n_verified }} / {{ r.n_example }}</td>
+      <td>{{ r.n_invalid }} / {{ r.n_responses }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p style="font-size:0.8rem;color:#666">Els valors són mitjana [IC bootstrap 95 %]. Generat per summarize_results.py.</p>
+
+<h2 style="font-size:1.1rem">Quins ítems es desplacen més entre llengües</h2>
+{% for r in rows %}
+  {% if r.shift_by_item %}
+  <p style="margin-bottom:0.2rem"><strong>{{ r.model_id }}</strong></p>
+  <table style="font-size:0.85rem;margin-top:0">
+    <thead><tr><th>ítem</th><th>tema</th><th>desplaçament (JSD ca↔es)</th></tr></thead>
+    <tbody>
+    {% for it in r.shift_by_item[:5] %}
+      <tr><td class="model">{{ it.item_id }}</td><td>{{ it.topic }}</td>
+          <td>{{ "%.3f"|format(it.shift) }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+{% endfor %}
+</body>
+</html>
